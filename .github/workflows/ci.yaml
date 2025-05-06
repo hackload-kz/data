@@ -19,7 +19,7 @@ jobs:
         dotnet-version: |
           9.0.x
     - name: Generate data
-      run: 
+      run: |
         dotnet fsi transliterate.fsx
         dotnet fsi generate.fsx
     - name: Upload data files
