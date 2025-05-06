@@ -1,0 +1,31 @@
+name: .NET
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: |
+          9.0.x
+    - name: Generate data
+      run: 
+        dotnet fsi transliterate.fsx
+        dotnet fsi generate.fsx
+    - name: Upload data files
+      uses: actions/upload-artifact@v4
+      with:
+          name: data
+          path: persons.csv
+
+      
