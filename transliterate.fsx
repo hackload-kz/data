@@ -1,8 +1,8 @@
 open System.IO
 
-let transliterate (name: string) : string =
+let транслитерировать (имя: string) : string =
     // Define a map for transliteration from Cyrillic to Latin
-    let transliterationMap = 
+    let словарьТранслитерации = 
         [ ('а', "a"); ('б', "b"); ('в', "v"); ('г', "g"); ('д', "d")
           ('е', "e"); ('ё', "yo"); ('ж', "zh"); ('з', "z"); ('и', "i")
           ('й', "y"); ('к', "k"); ('л', "l"); ('м', "m"); ('н', "n")
@@ -17,25 +17,25 @@ let transliterate (name: string) : string =
           ('ә', "a"); ('ғ', "g"); ('қ', "q"); ('ң', "n"); ('ө', "o")
           ('ұ', "u"); ('ү', "u"); ('Һ', "h") ] |> Map.ofList
 
-    let transliterated = 
-        name.ToLower()
-        |> Seq.fold (fun acc c ->
-            match Map.tryFind c transliterationMap with
-            | Some translit -> acc + translit
-            | None -> acc + string c) ""
-    transliterated.ToUpperInvariant()
+    let транслитерированное = 
+        имя.ToLower()
+        |> Seq.fold (fun акк c ->
+            match Map.tryFind c словарьТранслитерации with
+            | Some translit -> акк + translit
+            | None -> акк + string c) ""
+    транслитерированное.ToUpperInvariant()
 
-let transliterate_file filename header =
+let транслитерировать_файл имяФайла заголовок =
     let names = 
-        File.ReadAllLines filename 
+        File.ReadAllLines имяФайла 
         |> Seq.skip 1
         |> Seq.map (fun line -> line.Split(','))
         |> Seq.map (fun parts -> 
-            let transliterated = transliterate parts.[1]
+            let transliterated = транслитерировать parts.[1]
             $"{parts[0]},{parts[1]},{transliterated}")
         |> Seq.toList
 
-    File.WriteAllLines(filename, [ header ]  @ names)
+    File.WriteAllLines(имяФайла, [ заголовок ]  @ names)
 
-transliterate_file "first_names.csv" "Sex,NameKZ,NameEn"
-transliterate_file "last_names.csv" "Sex,NameKZ,NameEn"
+транслитерировать_файл "first_names.csv" "Sex,NameKZ,NameEn"
+транслитерировать_файл "last_names.csv" "Sex,NameKZ,NameEn"
